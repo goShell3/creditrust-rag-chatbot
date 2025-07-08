@@ -1,0 +1,35 @@
+name: DVC Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  dvc-repro:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install DVC and project dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install dvc[s3]  # adapt for your remote
+
+      - name: Pull data from DVC remote
+        run: dvc pull
+
+      - name: Run pipeline
+        run: dvc repro
+
+      - name: Upload trained model (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: model
+          path: models/my_model.pkl
