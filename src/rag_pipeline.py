@@ -9,13 +9,15 @@ embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
 # === Load Vector Store ===
 persist_path = "vector_store/chroma_db"
-client = chromadb.Client(Settings(persist_directory=persist_path, chroma_db_impl="duckdb+parquet"))
+client = chromadb.PersistentClient(path=persist_path)
 collection = client.get_collection("complaint_chunks")
 
 # === Load LLM ===
-generator = pipeline("text-generation", model="mistralai/Mistral-7B-Instruct-v0.1")  # Replace with preferred LLM
+generator = pipeline("text-generation", 
+                    model="mistralai/Mistral-7B-Instruct-v0.1", 
+                    use_auth_token=os.getenv("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"))  
 
-# === Prompt Template ===
+# Prompt Template 
 PROMPT_TEMPLATE = """
 You are a financial analyst assistant for CrediTrust. Your task is to answer questions about customer complaints.
 Use the following retrieved complaint excerpts to formulate your answer.
