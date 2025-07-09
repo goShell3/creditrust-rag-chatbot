@@ -15,7 +15,7 @@ collection = client.get_collection("complaint_chunks")
 # === Load LLM ===
 generator = pipeline("text-generation", 
                     model="mistralai/Mistral-7B-Instruct-v0.1", 
-                    use_auth_token=os.getenv("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"))  
+                    use_auth_token=os.getenv("HUGGINGFACE_HUB_TOKEN"))  
 
 # Prompt Template 
 PROMPT_TEMPLATE = """
